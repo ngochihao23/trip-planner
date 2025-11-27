@@ -1,7 +1,7 @@
-// src/components/Tickets/TicketModal.tsx
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, MapPin, Clock, Users, Ticket, X, ChevronRight } from 'lucide-react';
+import { MapPin, Clock, Star, Ticket, X } from 'lucide-react';
+import Image from "next/image";
+
 
 interface Attraction {
     id: string;
@@ -29,7 +29,7 @@ const attractions: Attraction[] = [
     },
     {
         id: '2',
-        name: 'Phố cổ Hội An',
+        name: 'Phố cổ Hội An - Đèn lồng lung linh',
         location: 'Quảng Nam',
         price: '120.000đ',
         originalPrice: '200.000đ',
@@ -67,98 +67,95 @@ interface TicketModalProps {
 }
 
 export default function TicketModal({ isOpen, onClose }: TicketModalProps) {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-
     return (
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
                     />
 
-                    {/* Modal - fullscreen trên mobile, center trên tablet+ */}
                     <motion.div
                         initial={{ y: '100%' }}
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-                        className="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl z-50 max-h-[90vh] overflow-hidden
-                       md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2
-                       md:w-full md:max-w-2xl md:rounded-3xl"
+                        className="fixed inset-x-0 bottom-0 top-16 md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-3xl md:max-h-[88vh] bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden z-50 flex flex-col"
                     >
-                        {/* Header */}
-                        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-[#0f172a]">Vé tham quan</h2>
-                            <button
-                                onClick={onClose}
-                                className="p-2 rounded-xl hover:bg-gray-100 transition"
-                            >
+                        <header className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-5 py-4 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-xl font-black text-gray-900">Vé tham quan</h2>
+                                <p className="text-xs text-gray-500 mt-0.5">Ưu đãi hôm nay</p>
+                            </div>
+                            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
                                 <X className="w-6 h-6" />
                             </button>
-                        </div>
+                        </header>
 
-                        {/* Danh sách */}
-                        <div className="overflow-y-auto max-h-[calc(90vh-80px)] pb-8">
-                            <div className="px-4 pt-4">
-                                {attractions.map((attraction) => (
+                        <div className="flex-1 overflow-y-auto px-4 py-4">
+                            <div className="space-y-4">
+                                {attractions.map((item) => (
                                     <motion.div
-                                        key={attraction.id}
+                                        key={item.id}
                                         whileTap={{ scale: 0.98 }}
-                                        onClick={() => setSelectedId(attraction.id)}
-                                        className="bg-white rounded-2xl shadow-md overflow-hidden mb-4 border border-gray-100 cursor-pointer"
+                                        className="group bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
                                     >
-                                        <div className="flex">
-                                            <div className="w-32 h-32 flex-shrink-0">
-                                                <img
-                                                    src={attraction.image}
-                                                    alt={attraction.name}
-                                                    className="w-full h-full object-cover"
+                                        <div className="flex flex-col sm:flex-row">
+                                            <div className="relative w-full sm:w-44 h-48 sm:h-auto overflow-hidden">
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                 />
-                                                {attraction.originalPrice && (
-                                                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-                                                        -35%
+                                                {item.originalPrice && (
+                                                    <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                                                        -{Math.round(100 - (parseInt(item.price.replace(/\D/g, '')) / parseInt(item.originalPrice.replace(/\D/g, '')) * 100))}%
                                                     </div>
                                                 )}
                                             </div>
 
-                                            <div className="flex-1 p-4">
-                                                <h3 className="font-bold text-[#0f172a] line-clamp-2">
-                                                    {attraction.name}
-                                                </h3>
-                                                <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
-                                                    <MapPin className="w-4 h-4" />
-                                                    {attraction.location}
-                                                </div>
-                                                <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
-                                                    <Clock className="w-3.5 h-3.5" />
-                                                    {attraction.openTime}
-                                                </div>
+                                            <div className="flex-1 p-4 flex flex-col justify-between min-h-0">
+                                                <div>
+                                                    <h3 className="font-bold text-lg text-gray-900 line-clamp-2">{item.name}</h3>
 
-                                                <div className="flex items-end justify-between mt-4">
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                              <span className="text-2xl font-bold text-[#0B6EFD]">
-                                {attraction.price}
-                              </span>
-                                                            {attraction.originalPrice && (
-                                                                <span className="text-sm text-gray-400 line-through">
-                                  {attraction.originalPrice}
-                                </span>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex items-center gap-1 text-xs text-gray-500">
-                                                            <Users className="w-4 h-4" />
-                                                            {attraction.sold} đã mua
-                                                        </div>
+                                                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3.5 h-3.5" />
+                                {item.location}
+                            </span>
+                                                        <span className="flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5" />
+                                                            {item.openTime}
+                            </span>
                                                     </div>
 
-                                                    <button className="bg-[#0B6EFD] text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-[#0654C6] transition flex items-center gap-2">
+                                                    <div className="flex items-center gap-2 mt-2">
+                                                        <div className="flex">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star key={i} className={`w-4 h-4 ${i < Math.floor(item.rating) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-sm font-bold">{item.rating}</span>
+                                                        <span className="text-xs text-gray-500">• {item.sold}</span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-end justify-between mt-4 pt-3 border-t border-gray-100">
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="text-2xl font-black text-[#0B6EFD]">{item.price}</span>
+                                                            {item.originalPrice && (
+                                                                <span className="text-sm text-gray-400 line-through">{item.originalPrice}</span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-xs text-gray-500">/người</p>
+                                                    </div>
+
+                                                    <button className="bg-gradient-to-r from-[#0B6EFD] to-[#2563EB] hover:from-[#0654C6] hover:to-[#1D4ED8] text-white px-7 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2">
                                                         <Ticket className="w-5 h-5" />
                                                         Mua ngay
                                                     </button>

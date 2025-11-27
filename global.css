@@ -1,0 +1,10 @@
+/* app/globals.css */
+@import "tailwindcss/preflight";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Custom global styles */
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+}
