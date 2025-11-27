@@ -1,4 +1,6 @@
-import { ModalWrapper } from '../ModalWrapper';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, Train, MapPin, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface TrainModalProps {
     isOpen: boolean;
@@ -6,66 +8,118 @@ interface TrainModalProps {
 }
 
 export default function TrainModal({ isOpen, onClose }: TrainModalProps) {
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsDesktop(window.innerWidth >= 768);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
     const routes = [
-        { route: 'Hà Nội → Sài Gòn', duration: '28h', price: '1.200.000đ' },
-        { route: 'Đà Nẵng → Huế', duration: '2h30', price: '250.000đ' },
-        { route: 'Sapa → Hà Nội', duration: '8h', price: '650.000đ' },
+        { route: 'Hà Nội → Sài Gòn', duration: '32h', price: '1.200.000đ', type: 'Giường nằm điều hòa' },
+        { route: 'Đà Nẵng → Huế', duration: '2h30', price: '250.000đ', type: 'Ghế mềm điều hòa' },
+        { route: 'Sapa → Hà Nội', duration: '8h', price: '650.000đ', type: 'Giường nằm cao cấp' },
+        { route: 'Nha Trang → Sài Gòn', duration: '7h30', price: '780.000đ', type: 'Ghế mềm điều hòa' },
     ];
 
+    const mobileVariants = { initial: { y: "100%" }, animate: { y: 0 }, exit: { y: "100%" } };
+    const desktopVariants = { initial: { scale: 0.94, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.94, opacity: 0 } };
+
     return (
-        <ModalWrapper isOpen={isOpen} onClose={onClose} title="Vé tàu hỏa">
-            <div className="space-y-4">
-                {routes.map(({ route, duration, price }) => (
-                    <div
-                        key={route}
+        <AnimatePresence>
+            {isOpen && (
+                <>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50" />
+
+                    <motion.div
+                        variants={isDesktop ? desktopVariants : mobileVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        transition={{ type: "spring", damping: 35, stiffness: 400 }}
                         className="
-              bg-gray-50 rounded-2xl p-5 border border-gray-200
-              flex flex-col gap-4
-              sm:flex-row sm:items-center sm:justify-between   /* quan trọng */
-              transition-all hover:shadow-md hover:bg-gray-100
-            "
+                            fixed inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl
+                            md:fixed md:inset-0 md:m-auto
+                            md:max-w-4xl md:max-h-[88vh] md:rounded-3xl
+                            bg-white shadow-2xl z-50 flex flex-col overflow-hidden
+                        "
                     >
-                        {/* Thông tin tuyến */}
-                        <div className="flex-1 min-w-0"> {/* thêm min-w-0 để tránh tràn text */}
-                            <h3 className="font-bold text-lg text-gray-900 truncate">{route}</h3>
-                            <div className="flex items-center gap-3 mt-2 text-sm text-gray-600">
-                <span className="flex items-center gap-1 shrink-0">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                    {duration}
-                </span>
-                                <span className="hidden sm:inline">• Ghế mềm điều hòa</span>
+                        {/* Header */}
+                        <header className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-5 py-4 md:px-7 md:py-5 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-xl md:text-2xl font-black text-emerald-600">Vé Tàu Hỏa</h2>
+                                <p className="text-xs md:text-sm text-gray-600 mt-0.5">Giá tốt • Chỗ đẹp • Đặt ngay</p>
+                            </div>
+                            <button onClick={onClose} className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition">
+                                <X className="w-5 h-5 text-gray-700" />
+                            </button>
+                        </header>
+
+                        {/* Danh sách */}
+                        <div className="flex-1 overflow-y-auto px-4 py-5 md:px-6 md:py-6">
+                            <div className="space-y-4">
+                                {routes.map((item, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.08 }}
+                                        className="bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-lg hover:border-emerald-200 transition-all duration-300"
+                                    >
+                                        <div className="p-4 md:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            {/* Thông tin */}
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-lg md:text-xl font-bold text-gray-900 truncate flex items-center gap-2">
+                                                    <MapPin className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                                                    {item.route}
+                                                </h3>
+                                                <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-600">
+                                                    <span className="flex items-center gap-1.5">
+                                                        <Clock className="w-4 h-4" />
+                                                        {item.duration}
+                                                    </span>
+                                                    <span className="hidden sm:inline">•</span>
+                                                    <span className="text-emerald-700 font-medium">{item.type}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Giá + Nút */}
+                                            <div className="flex items-end gap-4">
+                                                <div className="text-right">
+                                                    <div className="text-2xl md:text-3xl font-black text-emerald-600">
+                                                        {item.price}
+                                                    </div>
+                                                    <p className="text-xs text-gray-500">Đã gồm thuế phí</p>
+                                                </div>
+
+                                                <button className="
+                                                    bg-gradient-to-r from-emerald-600 to-green-600
+                                                    hover:from-emerald-700 hover:to-green-700
+                                                    active:scale-95 text-white font-bold
+                                                    text-base md:text-lg px-6 py-3.5 rounded-2xl
+                                                    shadow-lg hover:shadow-xl transition-all duration-300
+                                                    flex items-center gap-2 whitespace-nowrap
+                                                ">
+                                                    <Train className="w-5 h-5" />
+                                                    Đặt ngay
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+                                <p className="text-xs md:text-sm text-gray-600">
+                                    Giá thay đổi theo giờ • Còn chỗ đẹp • Đặt ngay để giữ giá tốt!
+                                </p>
                             </div>
                         </div>
-
-                        {/* Nút giá - ĐÃ FIX HOÀN HẢO */}
-                        <div className="sm:ml-6"> {/* tạo khoảng cách cố định trên desktop */}
-                            <button
-                                className="
-                  w-full sm:w-auto                    /* mobile full width, desktop vừa đủ */
-                  bg-green-600 hover:bg-green-700 active:bg-green-800
-                  text-white font-bold text-base sm:text-lg
-                  px-6 py-3.5 rounded-xl
-                  transition-all transform hover:scale-105 active:scale-100
-                  shadow-md
-                "
-                            >
-                                Từ {price}
-                            </button>
-                            <p className="text-xs text-gray-500 mt-2 text-center sm:hidden">
-                                Ghế mềm điều hòa
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-                <p className="text-sm text-gray-500">
-                    Giá có thể thay đổi theo thời điểm • Đặt vé ngay để giữ chỗ tốt nhất
-                </p>
-            </div>
-        </ModalWrapper>
+                    </motion.div>
+                </>
+            )}
+        </AnimatePresence>
     );
 }
