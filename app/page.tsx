@@ -13,12 +13,27 @@ import { Booking, Notification, UserProfile } from './types';
 export default function VietnamTravelApp() {
     const [activeTab, setActiveTab] = useState<'home' | 'itinerary' | 'notifications' | 'settings'>('home');
     const [notifications, setNotifications] = useState<Notification[]>([
-        { id: '1', title: 'Đặt tour thành công', message: 'Tour Hạ Long Bay đã được xác nhận', time: '2 giờ trước', read: false, type: 'booking' },
-        { id: '2', title: 'Thanh toán hoàn tất', message: 'Đã thanh toán 5.000.000đ', time: '1 ngày trước', read: false, type: 'payment' },
+        {
+            id: 'welcome-1',
+            title: 'Xin chào!',
+            message: 'Chào mừng bạn đã đến với ứng dụng của chúng tôi. Rất vui được đồng hành trong hành trình khám phá và trải nghiệm của bạn.',
+            time: 'Vừa xong',
+            read: false,
+            type: 'review',
+        },
+        {
+            id: 'welcome-2',
+            title: 'Thông báo thanh toán',
+            message: 'Tất cả các thông báo về đặt tour, thanh toán và cập nhật hành trình sẽ được hiển thị tại đây.',
+            time: 'Vừa xong',
+            read: false,
+            type: 'review',
+        }
     ]);
 
+
     const bookings: Booking[] = [];
-    const userProfile: UserProfile = { name: 'Nguyễn Văn A', email: 'nguyenvana@email.com', phone: '0901234567', bio: 'Yêu thích khám phá', avatar: 'User' };
+    const userProfile: UserProfile = { name: 'Ngô Chí Hào', email: 'chihao@email.com', phone: '0901234567', bio: 'Yêu thích khám phá', avatar: 'User' };
 
     const unreadCount = notifications.filter(n => !n.read).length;
 

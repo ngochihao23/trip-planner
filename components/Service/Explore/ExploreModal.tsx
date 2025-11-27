@@ -43,13 +43,12 @@ export default function ExploreModal({ isOpen, onClose }: ExploreModalProps) {
     return (
         <ModalWrapper isOpen={isOpen} onClose={onClose} title="Khám phá Việt Nam">
 
-            {/* SCROLL + DRAG */}
             <motion.div
-                className="space-y-5 max-h-[70vh] overflow-y-auto pr-2 cursor-grab active:cursor-grabbing"
-                drag="y"
-                dragConstraints={{ top: -200, bottom: 200 }}
+                className="space-y-5 max-h-[70vh] overflow-y-auto pr-2"
+                layout
             >
-                {places.map((p, index) => (
+
+            {places.map((p, index) => (
                     <motion.div
                         key={p.name}
                         initial={{ opacity: 0, y: 40 }}
@@ -59,7 +58,6 @@ export default function ExploreModal({ isOpen, onClose }: ExploreModalProps) {
                         whileTap={{ scale: 0.97 }}
                         className="relative w-full h-44 rounded-3xl overflow-hidden shadow-lg group"
                     >
-                        {/* IMAGE */}
                         <motion.div
                             className="absolute inset-0"
                             whileHover={{ scale: 1.15 }}
@@ -74,10 +72,8 @@ export default function ExploreModal({ isOpen, onClose }: ExploreModalProps) {
                             />
                         </motion.div>
 
-                        {/* GRADIENT */}
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
 
-                        {/* TEXT */}
                         <div className="absolute bottom-4 left-4 text-white drop-shadow-2xl">
                             <h3 className="text-xl font-extrabold">{p.name}</h3>
                             <p className="text-sm opacity-90">{p.desc}</p>
@@ -85,7 +81,6 @@ export default function ExploreModal({ isOpen, onClose }: ExploreModalProps) {
                     </motion.div>
                 ))}
             </motion.div>
-
         </ModalWrapper>
     );
 }
