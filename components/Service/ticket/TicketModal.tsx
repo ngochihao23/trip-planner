@@ -109,8 +109,11 @@ export default function TicketModal({ isOpen, onClose }: TicketModalProps) {
                                                 <Image
                                                     src={item.image}
                                                     alt={item.name}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                    fill
+                                                    sizes="100vw"
+                                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                                                 />
+
                                                 {item.originalPrice && (
                                                     <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                                                         -{Math.round(100 - (parseInt(item.price.replace(/\D/g, '')) / parseInt(item.originalPrice.replace(/\D/g, '')) * 100))}%
