@@ -45,7 +45,7 @@ const attractions: Attraction[] = [
         price: '850.000đ',
         rating: 4.7,
         sold: '5.6k+',
-        image: 'https://images.unsplash.com/photo-1540979388269-2aed1643e0d0?w=800',
+        image: '/images/cap.jpg',
         openTime: '07:30 - 17:00',
     },
     {
