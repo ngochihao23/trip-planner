@@ -22,7 +22,7 @@ const mockTours: TourResult[] = [
         duration: '2 ngày 1 đêm',
         price: '3.990.000đ',
         rating: 4.9,
-        image: '/images/ha-long.jpg',
+        image: '/images/ha-long.png',
         people: 12
     },
     {
