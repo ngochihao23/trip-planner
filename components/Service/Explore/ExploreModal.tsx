@@ -34,7 +34,6 @@ export default function ExploreModal({ isOpen, onClose }: ExploreModalProps) {
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Overlay */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

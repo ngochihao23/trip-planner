@@ -12,17 +12,27 @@ import { useState, useEffect } from "react";
 import LanguageSelector from "../profile/language";
 
 export default function SettingsTab({ user }: { user: UserProfile }) {
-    const [currentUser, setCurrentUser] = useState<UserProfile>(() => {
-        if (typeof window === "undefined") return user;
-        const saved = localStorage.getItem("user-profile");
-        return saved ? JSON.parse(saved) : user;
-    });
+    void user;
+    const emptyProfile: UserProfile = {
+        name: "",
+        email: "",
+        phone: "",
+        bio: "",
+        avatar: "",
+    };
 
-    const [language, setLanguage] = useState<string>(() => {
-        if (typeof window === "undefined") return "vi";
-        const savedLang = localStorage.getItem("app_language");
-        return savedLang ?? "vi";
+
+    const [currentUser, setCurrentUser] = useState<UserProfile>(() => {
+        if (typeof window === "undefined") return emptyProfile;
+
+        try {
+            const saved = localStorage.getItem("user-profile");
+            return saved ? JSON.parse(saved) : emptyProfile;
+        } catch {
+            return emptyProfile;
+        }
     });
+    const [language, setLanguage] = useState("vi");
 
     const [openLanguage, setOpenLanguage] = useState(false);
     const [isDesktop, setIsDesktop] = useState(false);
@@ -35,16 +45,36 @@ export default function SettingsTab({ user }: { user: UserProfile }) {
     }, []);
 
     const handleSave = async (updated: UserProfile) => {
-        localStorage.setItem("user-profile", JSON.stringify(updated));
-        setCurrentUser(updated);
+        const newUser = { ...updated };
+
+        // Nếu có file avatar mới → tạo URL tạm (không lưu base64)
+        if (updated.avatarFile) {
+            newUser.avatar = URL.createObjectURL(updated.avatarFile);
+            delete newUser.avatarFile;
+        }
+
+        // Chỉ lưu dữ liệu text → không lỗi QUOTA
+        const { avatar, ...smallData } = newUser;
+        localStorage.setItem("user-profile", JSON.stringify(smallData));
+
+        // Avatar lưu riêng bằng sessionStorage (không giới hạn dung lượng giống localStorage)
+        if (avatar) sessionStorage.setItem("user-avatar", avatar);
+
+        setCurrentUser(newUser);
+
+        // API update (nếu bạn có server thật)
         try {
             await fetch("/api/user/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updated),
+                body: JSON.stringify(newUser),
             });
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(err);
+        }
     };
+
+
 
     const accountItems = [
         { icon: User, label: "Thông tin cá nhân", color: "text-blue-600" },

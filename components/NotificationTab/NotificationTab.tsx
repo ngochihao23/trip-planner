@@ -1,4 +1,4 @@
-// NotificationTab.tsx
+"use client"
 import { motion } from 'framer-motion';
 import NotificationItem from './NotificationItem';
 import { Notification } from '@/app/types';

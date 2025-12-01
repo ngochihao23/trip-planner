@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import BookingCard from "./BookingCard";
 import { Booking } from "@/app/types";
