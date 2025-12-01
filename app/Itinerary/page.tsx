@@ -9,11 +9,8 @@ export default function ItineraryPage() {
     const [activeTab, setActiveTab] = useState("itinerary");
 
     return (
-        <>
-            {/* Header */}
-            <Header />
+        <><Header />
 
-            {/* Nội dung chính */}
             <div className="mt-16 mb-20">
                 <ItineraryTab bookings={[]} />
             </div>

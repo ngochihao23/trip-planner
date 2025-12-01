@@ -46,13 +46,12 @@ export default function HotelModal({ isOpen, onClose }: HotelModalProps) {
     }, []);
 
     const mobileVariants = { initial: { y: "100%" }, animate: { y: 0 }, exit: { y: "100%" } };
-    const desktopVariants = { initial: { scale: 0.94, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.94, opacity: 0 } };
+    const desktopVariants = { initial: { scale: 0.95, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.95, opacity: 0 } };
 
     return (
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Overlay */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -61,44 +60,39 @@ export default function HotelModal({ isOpen, onClose }: HotelModalProps) {
                         className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
                     />
 
-                    {/* Modal chính */}
                     <motion.div
                         variants={isDesktop ? desktopVariants : mobileVariants}
                         initial="initial"
                         animate="animate"
                         exit="exit"
-                        transition={{ type: "spring", damping: 35, stiffness: 400 }}
+                        transition={{ type: "spring", damping: 30, stiffness: 400 }}
                         className="
-                            fixed inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl
-                            md:fixed md:inset-0 md:m-auto
-                            md:max-w-4xl md:max-h-[88vh] md:rounded-3xl
-                            bg-white shadow-2xl z-50 flex flex-col overflow-hidden
-                        "
+              fixed inset-x-0 bottom-0 max-h-[90vh] rounded-t-3xl bg-white shadow-2xl z-50 flex flex-col
+              md:fixed md:inset-0 md:m-auto md:max-w-4xl md:max-h-[90vh] md:rounded-3xl
+            "
                     >
-                        {/* Header */}
-                        <header className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-5 py-4 md:px-7 md:py-5 flex items-center justify-between">
+                        <header className="sticky top-0 z-10 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-5 py-4 md:px-8 md:py-6 flex items-center justify-between">
                             <div>
                                 <h2 className="text-xl md:text-2xl font-black text-purple-600">Khách Sạn & Resort</h2>
-                                <p className="text-xs md:text-sm text-gray-600 mt-0.5">Ưu đãi cực sốc • Giảm tới 60%</p>
+                                <p className="text-xs md:text-sm text-gray-600 mt-1">Ưu đãi cực sốc • Giảm tới 60%</p>
                             </div>
-                            <button onClick={onClose} className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition">
+                            <button onClick={onClose} className="p-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition">
                                 <X className="w-5 h-5 text-gray-700" />
                             </button>
                         </header>
 
-                        {/* Danh sách khách sạn */}
-                        <div className="flex-1 overflow-y-auto px-4 py-5 md:px-6 md:py-6">
-                            <div className="space-y-5">
+                        <div className="flex-1 overflow-y-auto px-4 py-5 md:px-8 md:py-6">
+                            <div className="space-y-6 md:space-y-8">
                                 {hotels.map((hotel, i) => (
                                     <motion.div
                                         key={hotel.name}
-                                        initial={{ opacity: 0, y: 30 }}
+                                        initial={{ opacity: 0, y: 40 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.08 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        whileTap={{ scale: 0.985 }}
                                         className="group bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl hover:border-purple-200 transition-all duration-300"
                                     >
-                                        <div className="relative h-56 md:h-64">
+                                        <div className="relative h-56 md:h-72">
                                             <Image
                                                 src={hotel.image}
                                                 alt={hotel.name}
@@ -107,57 +101,59 @@ export default function HotelModal({ isOpen, onClose }: HotelModalProps) {
                                                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                                                 priority={i < 2}
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                                            {/* Badge giảm giá */}
                                             <div className="absolute top-4 left-4 bg-red-500 text-white font-black text-sm px-4 py-2 rounded-full shadow-lg animate-pulse">
                                                 -60%
                                             </div>
 
-                                            {/* Rating + Location */}
                                             <div className="absolute bottom-4 left-4 text-white">
                                                 <div className="flex items-center gap-2">
                                                     <div className="flex">
                                                         {[...Array(5)].map((_, idx) => (
-                                                            <Star key={idx} className={`w-5 h-5 ${idx < Math.floor(hotel.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+                                                            <Star
+                                                                key={idx}
+                                                                className={`w-5 h-5 ${idx < Math.floor(hotel.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                                                            />
                                                         ))}
                                                     </div>
                                                     <span className="font-bold text-lg">{hotel.rating}</span>
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-1">
+                                                <div className="flex items-center gap-1.5 mt-1">
                                                     <MapPin className="w-4 h-4" />
                                                     <span className="text-sm font-medium">{hotel.location}</span>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="p-5 md:p-6">
-                                            <h3 className="text-xl md:text-2xl font-black text-gray-900 line-clamp-2">
+                                        <div className="p-5 md:p-7">
+                                            <h3 className="text-lg md:text-2xl font-black text-gray-900 line-clamp-2">
                                                 {hotel.name}
                                             </h3>
                                             <p className="text-sm md:text-base text-gray-600 mt-2 font-medium">
                                                 {hotel.desc}
                                             </p>
 
-                                            <div className="mt-5 pt-4 border-t border-gray-100 flex items-end justify-between">
+                                            <div className="mt-6 pt-6 border-t border-gray-100 flex flex-col md:flex-row md:items-end justify-between gap-5">
                                                 <div>
-                                                    <p className="text-xs text-gray-500">Chỉ từ</p>
-                                                    <div className="text-3xl md:text-4xl font-black text-purple-600">
+                                                    <p className="text-xs md:text-sm text-gray-500">Chỉ từ</p>
+                                                    <div className="text-2xl md:text-4xl font-black text-purple-600 leading-tight">
                                                         {hotel.price}
                                                     </div>
-                                                    <p className="text-xs text-gray-500 mt-1">/đêm • Đã bao gồm thuế phí</p>
+                                                    <p className="text-xs md:text-sm text-gray-500 mt-1">/đêm • Đã bao gồm thuế phí</p>
                                                 </div>
 
                                                 <button className="
-                                                    relative overflow-hidden
-                                                    bg-gradient-to-r from-purple-600 to-indigo-600
-                                                    hover:from-purple-700 hover:to-indigo-700
-                                                    text-white font-black text-base md:text-lg
-                                                    px-8 py-4 rounded-2xl shadow-xl hover:shadow-purple-500/50
-                                                    transition-all duration-300 hover:scale-105 active:scale-95
-                                                    flex items-center gap-3
-                                                ">
-                                                    <Bed className="w-6 h-6" />
+                          relative overflow-hidden
+                          bg-gradient-to-r from-purple-600 to-indigo-600
+                          hover:from-purple-700 hover:to-indigo-700
+                          text-white font-black
+                          text-sm md:text-lg px-7 py-3.5 md:px-9 md:py-4
+                          rounded-2xl shadow-xl hover:shadow-purple-500/50
+                          transition-all duration-300 hover:scale-105 active:scale-95
+                          flex items-center justify-center gap-3 whitespace-nowrap
+                        ">
+                                                    <Bed className="w-5 h-5 md:w-6 md:h-6" />
                                                     <span className="relative z-10">Đặt ngay</span>
                                                     <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                                                 </button>
@@ -167,8 +163,7 @@ export default function HotelModal({ isOpen, onClose }: HotelModalProps) {
                                 ))}
                             </div>
 
-                            {/* Footer */}
-                            <div className="mt-6 p-5 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-200 text-center">
+                            <div className="mt-8 md:mt-10 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl border border-purple-200 text-center">
                                 <p className="text-purple-900 font-bold text-sm md:text-base">
                                     Miễn phí hủy phòng • Đặt trước trả sau • Tích điểm đổi quà
                                 </p>
